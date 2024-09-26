@@ -1,9 +1,19 @@
 import json
 import sys
 
+# ANSI escape sequences for colours.
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+CYAN = "\033[96m"
+RESET = "\033[0m"
+
+# Command line arguments.
 HELP = "-h"
 ADD = "--add"
 HISTORY = "--his"
+PROGRESS = "--prog"
 
 def load_degree_data(filename="degree.json"):
     try:
@@ -25,7 +35,6 @@ def add_course(degree_data):
     print("\nCOURSE ADDITION\n")
     available_categories = []
     for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
-        print(f"Category: {category['category']}")
         if "unit_categories" in category:
             for sub_cat in category["unit_categories"]:
                 available_categories.append((sub_cat["category"], category["category"]))
@@ -56,12 +65,10 @@ def add_course(degree_data):
 
     for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
         if category["category"] == main_category:
-            print(f"Main category: {main_category}.")
             # Check if there's a sub-category
             if "unit_categories" in category:
                 for sub_cat in category["unit_categories"]:
                     if sub_cat["category"] == sub_category:
-                        print(f"Sub-category: {sub_category}.")
                         # For now just add to hardcoded category.
                         course_code = input("Enter course code: ")
                         course_name = input("Enter course name: ")
@@ -152,12 +159,63 @@ def display_course_history(degree_data):
     print("\nCOURSE HISTORY\n")
     for year, sem in sorted_years_and_sems:
         print("==============================")
-        print(f"Semester {sem}, {year}")
+        print(f"{BLUE}Semester {sem}, {year}{RESET}")
         print("==============================")
         for course in sorted_courses:
             if course[0] == year and course[1] == sem:
                 print(f"{course[2]} - {course[3]}")
     print()
+
+def display_progress(degree_data):
+    """
+    Displays the progress of the degree completion.
+    """
+    degree_units_required = degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["units_required"]
+    overall_units_completed = 0
+    categories_completion = []
+
+    for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
+        if "unit_categories" in category:
+            for sub_cat in category["unit_categories"]:
+                sub_cat_units_completed = 0
+                for course in sub_cat["courses"]:
+                    if course["completed"]:
+                        sub_cat_units_completed += course["units"]
+                categories_completion.append((sub_cat["category"], sub_cat_units_completed, sub_cat["min_units"], sub_cat["max_units"]))
+        elif "courses" in category:
+            cat_units_completed = 0
+            for course in category["courses"]:
+                if course["completed"]:
+                    cat_units_completed += course["units"]
+            categories_completion.append((category["category"], cat_units_completed, category["min_units"], category["max_units"]))
+    
+    print("\nDEGREE PROGRESS\n")
+    for category in categories_completion:
+        print("==================================================")
+        print(f"{BLUE}{category[0]}{RESET}")
+        print("==================================================")
+        if category[1] >= category[2] and category[2] == category[3]:
+            print(f"You have completed {category[1]} units in this category.")
+            print(f"You have completed all units in this category.")
+        elif category[1] >= category[2] and category[2] != category[3]:
+            print(f"You have completed {category[1]} units in this category.")
+            print(f"You have completed more than the required units in this category.")
+            print(f"If you wanted to, you could complete up to {YELLOW}{category[3]}{RESET} more units.")
+        elif category[1] < category[2] and category[2] == category[3]:
+            print(f"You have completed {category[1]} units in this category.")
+            print(f"You need to complete {RED}{category[2] - category[1]}{RESET} more units.")
+        elif category[1] < category[2] and category[2] != category[3]:
+            print(f"You have completed {category[1]} units in this category.")
+            print(f"You need to complete between {RED}{category[2] - category[1]}{RESET} and {RED}{category[3] - category[1]}{RESET} more units.")
+        else:
+            print("Cannot compute :/")
+    print()
+
+def recommend_courses(degree_data, semester):
+    """
+    Recommends courses based on the current progress of the degree.
+    """
+    pass
 
 def display_usage():
     print(f"Usage: python3 degree_manager.py [{HELP}] [{ADD}] [{HISTORY}]")
@@ -169,6 +227,7 @@ def display_help():
     print(f"{HELP}:  Show this help message and exit.")
     print(f"{ADD}:  Add a new course to the degree data.")
     print(f"{HISTORY}:  Show all completed courses so far.")
+    print(f"{PROGRESS}:  Show progress of degree completion.")
     print()
 
 def main():
@@ -176,18 +235,34 @@ def main():
 
     if len(sys.argv) < 2:
         display_usage()
+    
+    something_recognised = False
 
     if HELP in sys.argv:
+        something_recognised = True
         display_help()
     
     if ADD in sys.argv:
+        something_recognised = True
         add = True
         while add:
             add_course(degree_data)
             add = input("Would you like to add another course? (y/n): ") == "y"
     
     if HISTORY in sys.argv:
+        something_recognised = True
         display_course_history(degree_data)
+    
+    if PROGRESS in sys.argv:
+        something_recognised = True
+        display_progress(degree_data)
+        recommend = input("Would you like to see recommended courses? (y/n): ") == "y"
+        if recommend:
+            semester = int(input("Enter the semester you would like to see courses for (1/2): "))
+            recommend_courses(degree_data, semester)
+    
+    if not something_recognised:
+        display_usage()
 
 if __name__ == "__main__":
     main()
