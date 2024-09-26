@@ -25,6 +25,7 @@ def add_course(degree_data):
     print("\nCOURSE ADDITION\n")
     available_categories = []
     for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
+        print(f"Category: {category['category']}")
         if "unit_categories" in category:
             for sub_cat in category["unit_categories"]:
                 available_categories.append((sub_cat["category"], category["category"]))
@@ -33,7 +34,10 @@ def add_course(degree_data):
     
     print("These categories can be added to:")
     for i, category in enumerate(available_categories):
-        print(f"{i+1}. {category[0]}")
+        if category[1] is not None:
+            print(f"{i+1}. {category[1]} -> {category[0]}")
+        else:
+            print(f"{i+1}. {category[0]}")
     print()
     
     category_index = int(input("Enter the number of the category you would like to add to: "))
@@ -52,10 +56,12 @@ def add_course(degree_data):
 
     for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
         if category["category"] == main_category:
+            print(f"Main category: {main_category}.")
             # Check if there's a sub-category
             if "unit_categories" in category:
                 for sub_cat in category["unit_categories"]:
                     if sub_cat["category"] == sub_category:
+                        print(f"Sub-category: {sub_category}.")
                         # For now just add to hardcoded category.
                         course_code = input("Enter course code: ")
                         course_name = input("Enter course name: ")
@@ -63,8 +69,8 @@ def add_course(degree_data):
                         sem_one = input("Is this course offered in semester one? (y/n): ") == "y"
                         sem_two = input("Is this course offered in semester two? (y/n): ") == "y"
                         completed = input("Have you completed this course? (y/n): ") == "y"
-                        completed_year = json.null
-                        completed_sem = json.null
+                        completed_year = None
+                        completed_sem = None
                         if completed:
                             completed_year = int(input("Enter the year you completed this course (YYYY): "))
                             completed_sem = int(input("Enter the semester you completed this course (1/2): "))  
