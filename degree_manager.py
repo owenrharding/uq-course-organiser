@@ -1,6 +1,10 @@
 import json
 import sys
 
+HELP = "-h"
+ADD = "--add"
+HISTORY = "--his"
+
 def load_degree_data(filename="degree.json"):
     try:
         with open(filename, "r") as file:
@@ -85,36 +89,71 @@ def display_course_history(degree_data):
     """
     Displays all comepleted courses so far.
     """
-    pass
+    # Inefficient, but works for now.
+    completed_courses = []
+    years_and_sems = []
+
+    # Extract al courses which are true for "completed".
+    for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
+        if "unit_categories" in category:
+            for sub_cat in category["unit_categories"]:
+                for course in sub_cat["courses"]:
+                    if course["completed"]:
+                        completed_courses.append((course["completed_year"], course["completed_sem"], course["code"], course["name"]))
+                        # Keep track of all years and semesters, keeping them unique.
+                        if (course["completed_year"], course["completed_sem"]) not in years_and_sems:
+                            years_and_sems.append((course["completed_year"], course["completed_sem"]))
+        elif "courses" in category:
+            for course in category["courses"]:
+                if course["completed"]:
+                    completed_courses.append((course["completed_year"], course["completed_sem"], course["code"], course["name"]))
+                    # Keep track of all years and semesters, keeping them unique.
+                    if (course["completed_year"], course["completed_sem"]) not in years_and_sems:
+                        years_and_sems.append((course["completed_year"], course["completed_sem"]))
+    
+    # Sort the completed courses by completed_year and completed_sem.
+    # Thanks chatgpt for this.
+    sorted_courses = sorted(completed_courses, key=lambda x: (x[0], x[1]))
+    sorted_years_and_sems = sorted(years_and_sems, key=lambda x: (x[0], x[1]))
+
+    print("\nCOURSE HISTORY\n")
+    for year, sem in sorted_years_and_sems:
+        print("==============================")
+        print(f"Semester {sem}, {year}")
+        print("==============================")
+        for course in sorted_courses:
+            if course[0] == year and course[1] == sem:
+                print(f"{course[2]} - {course[3]}")
+    print()
 
 def display_usage():
-    print("Usage: python3 degree_manager.py [-h] [-a] [-c] []")
+    print(f"Usage: python3 degree_manager.py [{HELP}] [{ADD}] [{HISTORY}]")
 
 def display_help():
     print()
     display_usage()
     print("Options:")
-    print("    -h:  Show this help message and exit.")
-    print("    -a:  Add a new course to the degree data.")
-    print("    -c:  Show all completed courses so far.")
+    print(f"{HELP}:  Show this help message and exit.")
+    print(f"{ADD}:  Add a new course to the degree data.")
+    print(f"{HISTORY}:  Show all completed courses so far.")
     print()
 
 def main():
     degree_data = load_degree_data()
 
-    if len(sys.argv) <= 2:
+    if len(sys.argv) < 2:
         display_usage()
 
-    if "-h" in sys.argv:
+    if HELP in sys.argv:
         display_help()
     
-    if "-a" in sys.argv:
+    if ADD in sys.argv:
         add = True
         while add:
             add_course(degree_data, "Field of Software Engineering", "Software Engineering Compulsory Courses")
             add = input("Would you like to add another course? (y/n): ") == "y"
     
-    if "-c" in sys.argv:
+    if HISTORY in sys.argv:
         display_course_history(degree_data)
 
 if __name__ == "__main__":
