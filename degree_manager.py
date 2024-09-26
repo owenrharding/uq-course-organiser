@@ -18,11 +18,38 @@ def save_degree_data(degree_data, filename="degree.json"):
         json.dump(degree_data, file)
     print("Degree data saved successfully.")
 
-def add_course(degree_data, main_category, sub_category):
+def add_course(degree_data):
     """
     Adds a new degree to the json file through prompting user input.
     """
     print("\nCOURSE ADDITION\n")
+    available_categories = []
+    for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
+        if "unit_categories" in category:
+            for sub_cat in category["unit_categories"]:
+                available_categories.append((sub_cat["category"], category["category"]))
+        else:
+            available_categories.append((category["category"], None))
+    
+    print("These categories can be added to:")
+    for i, category in enumerate(available_categories):
+        print(f"{i+1}. {category[0]}")
+    print()
+    
+    category_index = int(input("Enter the number of the category you would like to add to: "))
+
+    if category_index < 1 or category_index > len(available_categories):
+        print("Invalid category number.")
+        return
+    
+    main_category = None
+    sub_category = None
+    if available_categories[category_index-1][1] is not None:
+        main_category = available_categories[category_index-1][1]
+        sub_category = available_categories[category_index-1][0]
+    else:
+        main_category = available_categories[category_index-1][0]
+
     for category in degree_data["Bachelor of Engineering (Honours) and Master of Engineering"]["unit_categories"]:
         if category["category"] == main_category:
             # Check if there's a sub-category
@@ -150,7 +177,7 @@ def main():
     if ADD in sys.argv:
         add = True
         while add:
-            add_course(degree_data, "Field of Software Engineering", "Software Engineering Compulsory Courses")
+            add_course(degree_data)
             add = input("Would you like to add another course? (y/n): ") == "y"
     
     if HISTORY in sys.argv:
