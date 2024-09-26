@@ -1,0 +1,48 @@
+{
+    "Bachelor of Engineering (Honours) and Master of Engineering": {
+      "min_units_required": 80,
+      "unit_categories": [
+        {
+          "category": "BE(Hons)/ME Core Courses",
+          "min_units_required": 8,
+          "courses": [
+            { "code": "ENGG1100", "name": "Professional Engineering", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2024, "completed_sem": 1 },
+            { "code": "CSSE1001", "name": "Introduction to Software Engineering", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2023, "completed_sem": 1 },
+            { "code": "MATH1051", "name": "Calculus & Linear Algebra I", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2023, "completed_sem": 1 },
+            { "code": "MATH1052", "name": "Multivariate Calculus & Ordinary Differential Equations", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2023, "completed_sem": 2 }
+          ]
+        },
+        {
+          "category": "Field of Software Engineering",
+          "min_units_required": 66,
+          "unit_categories": [
+            {
+              "category": "Software Engineering Compulsory Courses",
+              "min_units_required": 42,
+              "courses": [
+                { "code": "ENGG1300", "name": "Introduction to Electrical Systems", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2024, "completed_sem": 1 },
+                { "code": "INFS1200", "name": "Introduction to Information Systems", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2023, "completed_sem": 1 },
+                { "code": "MATH1061", "name": "Discrete Mathematics", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2023, "completed_sem": 1 },
+                { "code": "CSSE2002", "name": "Programming in the Large", "units": 2, "semester_one": true, "semester_two": true, "completed": true, "completed_year": 2023, "completed_sem": 2 },
+                { "code": "CSSE2010", "name": "Introduction to Computer Systems", "units": 2, "semester_one": true, "semester_two": true, "completed": true , "completed_year": 2023, "completed_sem": 2},
+                { "code": "CSSE2310", "name": "Computer Systems Principles and Programming", "units": 2, "semester_one": true, "semester_two": true, "completed": true , "completed_year": 2024, "completed_sem": 2},
+                { "code": "DECO2500", "name": "Human-Computer Interaction", "units": 2, "semester_one": true, "semester_two": true, "completed": true , "completed_year": 2024, "completed_sem": 1},
+                { "code": "STAT2203", "name": "Probability Models & Data Analysis", "units": 2, "semester_one": false, "semester_two": true, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "COMP3400", "name": "Functional and Logic Programming", "units": 2, "semester_one": true, "semester_two": false, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "COMP3506", "name": "Algorithms and Data Structures", "units": 2, "semester_one": false, "semester_two": true, "completed": true , "completed_year": 2024, "completed_sem": 2},
+                { "code": "CSSE3012", "name": "The Software Process", "units": 2, "semester_one": true, "semester_two": false, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "CSSE3200", "name": "Software Engineering Studio: Design, Implement and Test", "units": 2, "semester_one": false, "semester_two": true, "completed": true, "completed_year": 2024, "completed_sem": 2},
+                { "code": "DECO3800", "name": "Design Computing Studio 3 - Proposal", "units": 2, "semester_one": true, "semester_two": false, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "DECO3801", "name": "Design Computing Studio 3 - Build", "units": 2, "semester_one": true, "semester_two": true, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "CSSE6400", "name": "Software Architecture", "units": 2, "semester_one": true, "semester_two": false, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "ENGG4901/ENGG4902", "name": "Professional Practice and the Business Environment", "units": 2, "semester_one": true, "semester_two": true, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "ENGG7291", "name": "Engineering Placement A", "units": 8, "semester_one": true, "semester_two": false, "completed": false, "completed_year": null, "completed_sem": null },
+                { "code": "ENGG7701", "name": "Engineering Grand Challenges", "units": 2, "semester_one": false, "semester_two": false, "completed": false, "completed_year": null, "completed_sem": null }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+  
