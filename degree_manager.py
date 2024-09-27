@@ -176,6 +176,10 @@ def display_progress(degree_data):
     """
     degree_units_required = degree_data[BEME]["units_required"]
     overall_units_completed = 0
+    compulsory_units_completed = 0
+    compulsory_units_required = 0
+    de_units_completed = 0
+    general_units_completed = 0
     categories_completion = []
 
     for category in degree_data[BEME]["unit_categories"]:
@@ -196,6 +200,13 @@ def display_progress(degree_data):
     print(f"\n{GREEN}DEGREE PROGRESS{RESET}\n")
     for category in categories_completion:
         overall_units_completed += category[1]
+        if "Compulsory" in category[0] or "Core" in category[0]:
+            compulsory_units_completed += category[1]
+            compulsory_units_required += category[2]
+        elif "General Elective" in category[0]:
+            general_units_completed += category[1]
+        else:
+            de_units_completed += category[1]
         print("==================================================")
         print(f"{BLUE}{category[0]}{RESET}")
         print("==================================================")
@@ -223,6 +234,8 @@ def display_progress(degree_data):
         print(f"You have completed all units required for the degree.")
     else:
         print(f"You need to complete {RED}{degree_units_required - overall_units_completed}{RESET} more units to complete the degree.")
+        print(f"Of this, {RED}{compulsory_units_required - compulsory_units_completed}{RESET} are compulsory units.")
+        print(f"This means you have {RED}{degree_units_required - overall_units_completed - (compulsory_units_required - compulsory_units_completed)}{RESET} units to complete using disciplinary or general electives.")
         print(f"This is roughly {RED}{(degree_units_required - overall_units_completed)/8/2}{RESET} more years.")
     print()
 
@@ -279,6 +292,7 @@ def main():
 
     if len(sys.argv) < 2:
         display_usage()
+        return
     
     something_recognised = False
 
